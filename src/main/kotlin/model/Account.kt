@@ -12,7 +12,7 @@ import org.litote.kmongo.newId
 data class Account(
     @Contextual @SerialName("_id") val _id: Id<Account> = newId(),
     override val username: String,
-    override val password: String,
+    override val password: String?,
     override val person: Person?,
 ) : IAccount, IValidation {
 
@@ -22,7 +22,7 @@ data class Account(
             list.add("Username is missing or is not an email")
         }
 
-        if (password.isEmpty() || password.count() < 6) {
+        if (password?.isEmpty()!! || password.count() < 6) {
             list.add("Password is missing or less than 6 characters")
         }
         return list

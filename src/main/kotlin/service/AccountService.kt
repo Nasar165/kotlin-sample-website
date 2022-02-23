@@ -5,14 +5,20 @@ import com.mcsunity.model.inteface.IService
 import com.mongodb.client.MongoDatabase
 import org.bson.conversions.Bson
 import org.bson.types.ObjectId
-import org.litote.kmongo.findOneById
-import org.litote.kmongo.getCollection
+import org.litote.kmongo.*
 
 class AccountService(mongodbClient: MongoDatabase) : IService {
     private var collection = mongodbClient.getCollection<Account>("accounts")
 
     override fun <T> get(): T {
-        val result = collection.find().toList()
+        val result =
+            collection.find(Account::username eq "nasar")
+                .projection(
+                    fields(
+                        include(Account::username, Account::person)
+                    )
+                ).ascendingSort(Account::_id)
+                .toList()
         return result as T
     }
 
